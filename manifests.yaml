@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: secrets-store-csi-driver-provider-infisical
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: secrets-store-csi-driver-provider-infisical
+  template:
+    metadata:
+      labels:
+        app: secrets-store-csi-driver-provider-infisical
+    spec:
+      serviceAccountName: secrets-store-csi-driver-provider-infisical
+      containers:
+      - name: provider
+        image: gidoichi/secrets-store-csi-driver-provider-infisical:latest
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: socket
+          mountPath: /etc/kubernetes/secrets-store-csi-providers
+      volumes:
+      - name: socket
+        hostPath:
+          path: /etc/kubernetes/secrets-store-csi-providers
+          type: DirectoryOrCreate
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-csi-provider
+  namespace: default
+  labels:
+    app: test-csi-provider
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-csi-provider
+  template:
+    metadata:
+      labels:
+        app: test-csi-provider
+    spec:
+      containers:
+      - name: client
+        image: busybox:latest
+        command: ["sh", "-c"]
+        args:
+        - |
+          set -eux
+          ls /run/secrets
+          find /run/secrets/ -mindepth 1 -maxdepth 1 -not -name '.*' | xargs -t -I {} sh -c 'echo "$(cat "{}")"'
+          tail -f /dev/null
+        volumeMounts:
+        - name: data
+          mountPath: /run/secrets
+      volumes:
+      - name: data
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "test-csi-provider"
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: secrets-store-csi-driver-provider-infisical
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: secrets-store-csi-driver-provider-infisical
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: secrets-store-csi-driver-provider-infisical
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: secrets-store-csi-driver-provider-infisical
+subjects:
+- kind: ServiceAccount
+  namespace: default
+  name: secrets-store-csi-driver-provider-infisical
+---
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: test-csi-provider
+  namespace: default
+spec:
+  provider: infisical
+  parameters:
+    projectSlug: example-project-em-9-e
+    envSlug: dev
+    secretsPath: / # optional,default="/"
+    authSecretName: infisical-secret-provider-auth-credentials
+    authSecretNamespace: default
+  secretObjects:
+  - secretName: test-csi-provider
+    type: Opaque
+    data:
+    - objectName: DATABASE_URL
+      key: url
