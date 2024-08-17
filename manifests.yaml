@@ -105,6 +105,10 @@ spec:
     secretsPath: / # optional,default="/"
     authSecretName: infisical-secret-provider-auth-credentials
     authSecretNamespace: default
+    objects: |
+      - objectName: DATABASE_URL
+      - objectName: DB_USERNAME
+      - objectName: DB_PASSWORD
   secretObjects:
   - secretName: test-csi-provider
     type: Opaque

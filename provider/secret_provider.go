@@ -1,3 +1,4 @@
+//go:generate mockgen -destination=mock_$GOPACKAGE/mock_$GOFILE -source=$GOFILE
 package provider
 
 import (
@@ -5,6 +6,20 @@ import (
 	api "github.com/infisical/go-sdk/packages/api/auth"
 	"github.com/infisical/go-sdk/packages/models"
 )
+
+type InfisicalClientFactory interface {
+	NewClient(config infisical.Config) InfisicalClient
+}
+
+func NewInfisicalClientFactory() InfisicalClientFactory {
+	return &infisicalClientFactory{}
+}
+
+type infisicalClientFactory struct{}
+
+func (f *infisicalClientFactory) NewClient(config infisical.Config) InfisicalClient {
+	return NewInfisicalClient(config)
+}
 
 type InfisicalClient interface {
 	UniversalAuthLogin(string, string) (api.MachineIdentityAuthLoginResponse, error)
@@ -27,18 +42,4 @@ func (c *infisicalClient) UniversalAuthLogin(clientID, clientSecret string) (api
 
 func (c *infisicalClient) ListSecrets(options infisical.ListSecretsOptions) ([]models.Secret, error) {
 	return c.client.Secrets().List(options)
-}
-
-type InfisicalClientFactory interface {
-	NewClient(config infisical.Config) infisical.InfisicalClientInterface
-}
-
-func NewInfisicalClientFactory() InfisicalClientFactory {
-	return &infisicalClientFactory{}
-}
-
-type infisicalClientFactory struct{}
-
-func (f *infisicalClientFactory) NewClient(config infisical.Config) infisical.InfisicalClientInterface {
-	return infisical.NewInfisicalClient(config)
 }

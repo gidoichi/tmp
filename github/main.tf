@@ -27,6 +27,18 @@ resource "github_repository" "this" {
   squash_merge_commit_title   = "PR_TITLE"
 }
 
+resource "github_branch_protection" "default" {
+  repository_id = github_repository.this.node_id
+  pattern       = "main"
+  required_status_checks {
+    strict = true
+    contexts = [
+      "build-container",
+      "go-test",
+    ]
+  }
+}
+
 resource "github_repository_environment" "dockerhub" {
   environment = "dockerhub"
   repository  = github_repository.this.name

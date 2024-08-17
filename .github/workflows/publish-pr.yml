@@ -1,4 +1,4 @@
-name: Publish container image
+name: Publish container image on Pull Request
 on:
   pull_request:
 jobs:
