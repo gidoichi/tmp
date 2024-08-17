@@ -17,5 +17,5 @@ jobs:
       - name: Push tag
         uses: mathieudutour/github-tag-action@v6.2
         with:
-          custom_tag: v${{ steps.version.outputs.runtime }}
+          custom_tag: ${{ steps.version.outputs.runtime }}
           github_token: ${{ secrets.GH_PAT_FOR_CREATE_PULL_REQUEST_ACTION }}
