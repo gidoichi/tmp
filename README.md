@@ -12,29 +12,3 @@ Unofficial Infisical provider for the Secret Store CSI Driver.
   ```
   kubectl apply -f ./manifests.yaml
   ```
-
-## Usage
-
-```yaml
-apiVersion: secrets-store.csi.x-k8s.io/v1
-kind: SecretProviderClass
-metadata:
-  name: test-csi-provider
-  namespace: default
-spec:
-  provider: infisical
-  parameters:
-    projectSlug: example-project-em-9-e
-    envSlug: dev
-    secretsPath: /
-    # Kubernetes Secret name storing Infisical client ID and client secret
-    authSecretName: infisical-secret-provider-auth-credentials
-    # Kubernetes Secret namespace
-    authSecretNamespace: default
-  secretObjects:
-  - secretName: test-csi-provider
-    type: Opaque
-    data:
-    - objectName: DATABASE_URL
-      key: url
-```

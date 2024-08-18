@@ -1,0 +1,6 @@
+apiVersion: v2
+name: secrets-store-csi-driver-provider-infisical
+description: A Helm chart for Infisical provider
+type: application
+version: 0.1.0
+appVersion: "0.1.1"

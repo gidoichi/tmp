@@ -84,9 +84,7 @@ func TestCSIProviderServerMounts(t *testing.T) {
 
 				if len(actual.ObjectVersion) != 2 {
 					t.Errorf("unexpected object versions: %v", actual.ObjectVersion)
-					t.FailNow()
-				}
-				if actual.ObjectVersion[0].Id != expectedObjectVersions[0].Id ||
+				} else if actual.ObjectVersion[0].Id != expectedObjectVersions[0].Id ||
 					actual.ObjectVersion[0].Version != expectedObjectVersions[0].Version ||
 					actual.ObjectVersion[1].Id != expectedObjectVersions[1].Id ||
 					actual.ObjectVersion[1].Version != expectedObjectVersions[1].Version {
@@ -95,9 +93,7 @@ func TestCSIProviderServerMounts(t *testing.T) {
 
 				if len(actual.Files) != 2 {
 					t.Errorf("unexpected files: %v", actual.Files)
-					t.FailNow()
-				}
-				if actual.Files[0].Path != expectedFiles[0].Path ||
+				} else if actual.Files[0].Path != expectedFiles[0].Path ||
 					actual.Files[0].Mode != expectedFiles[0].Mode ||
 					string(actual.Files[0].Contents) != string(expectedFiles[0].Contents) ||
 					actual.Files[1].Path != expectedFiles[1].Path ||
@@ -217,8 +213,8 @@ func TestCSIProviderServerMounts(t *testing.T) {
 				if actual.Error != nil && actual.Error.Code != "" {
 					t.Errorf("unexpected error: %v", actual.Error)
 				}
-				if len(actual.Files) != 2 {
-					t.Errorf("unexpected files: %v", actual.Files)
+				if len(actual.ObjectVersion) != 2 {
+					t.Errorf("unexpected object versions: %v", actual.ObjectVersion)
 				}
 			},
 		},
@@ -263,14 +259,11 @@ func TestCSIProviderServerMounts(t *testing.T) {
 				if actual.Error != nil && actual.Error.Code != "" {
 					t.Errorf("unexpected error: %v", actual.Error)
 				}
-				if len(actual.Files) != 1 {
-					t.Errorf("unexpected files: %v", actual.Files)
-					t.FailNow()
-				}
-				if actual.Files[0].Path != "DB_USERNAME" ||
-					actual.Files[0].Mode != 420 ||
-					string(actual.Files[0].Contents) != "admin" {
-					t.Errorf("unexpected files: %v", actual.Files)
+				if len(actual.ObjectVersion) != 1 {
+					t.Errorf("unexpected object versions: %v", actual.ObjectVersion)
+				} else if actual.ObjectVersion[0].Id != "DB_USERNAME" ||
+					actual.ObjectVersion[0].Version != "1" {
+					t.Errorf("unexpected object versions: %v", actual.ObjectVersion)
 				}
 			},
 		},

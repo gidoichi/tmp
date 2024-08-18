@@ -6,14 +6,20 @@ import (
 )
 
 type MountConfig struct {
-	Project             string  `json:"projectSlug" validate:"required"`
-	Env                 string  `json:"envSlug" validate:"required"`
-	Path                string  `json:"secretsPath" validate:"required"`
-	AuthSecretName      string  `json:"authSecretName" validate:"required"`
-	AuthSecretNamespace string  `json:"authSecretNamespace" validate:"required"`
-	RawObjects          *string `json:"objects"`
-	parsedObjects       []object
-	validator           validator.Validate
+	Project                  string  `json:"projectSlug" validate:"required"`
+	Env                      string  `json:"envSlug" validate:"required"`
+	Path                     string  `json:"secretsPath" validate:"required"`
+	AuthSecretName           string  `json:"authSecretName" validate:"required"`
+	AuthSecretNamespace      string  `json:"authSecretNamespace" validate:"required"`
+	RawObjects               *string `json:"objects"`
+	CSIPodName               string  `json:"csi.storage.k8s.io/pod.name"`
+	CSIPodNamespace          string  `json:"csi.storage.k8s.io/pod.namespace"`
+	CSIPodUID                string  `json:"csi.storage.k8s.io/pod.uid"`
+	CSIPodServiceAccountName string  `json:"csi.storage.k8s.io/serviceAccount.name"`
+	CSIEphemeral             string  `json:"csi.storage.k8s.io/ephemeral"`
+	SecretProviderClass      string  `json:"secretProviderClass"`
+	parsedObjects            []object
+	validator                validator.Validate
 }
 
 type object struct {

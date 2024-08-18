@@ -104,6 +104,12 @@ func (s *CSIProviderServer) Mount(ctx context.Context, req *v1alpha1.MountReques
 		return mountResponse, fmt.Errorf("failed to get objects, error: %w", err)
 	}
 	if mountConfig.RawObjects != nil && len(objects) == 0 {
+		mountResponse.ObjectVersion = []*v1alpha1.ObjectVersion{
+			{
+				Id:      "NO_SECRETS",
+				Version: "0",
+			},
+		}
 		return mountResponse, nil
 	}
 

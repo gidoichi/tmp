@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-provider-infisical
+  namespace: default
+  labels:
+    app: example-provider-infisical
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: example-provider-infisical
+  template:
+    metadata:
+      labels:
+        app: example-provider-infisical
+    spec:
+      containers:
+      - name: client
+        image: busybox:latest
+        command: ["sh", "-c"]
+        args:
+        - |
+          set -eux
+          ls /run/secrets
+          find /run/secrets/ -mindepth 1 -maxdepth 1 -not -name '.*' | xargs -t -I {} sh -c 'echo "$(cat "{}")"'
+          tail -f /dev/null
+        volumeMounts:
+        - name: data
+          mountPath: /run/secrets
+      volumes:
+      - name: data
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "example-provider-infisical"
+---
