@@ -44,6 +44,26 @@ jobs:
         env:
           TF_VAR_GITHUB_TOKEN: ""
 
+  updated-helm-chart-index:
+    runs-on: ubuntu-latest
+    needs: go-test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+      - name: Diff charts/index.yaml
+        working-directory: charts
+        env:
+          PROVIDER_VERSION: ${{ needs.go-test.outputs.version }}
+        run: |
+          set -eux
+          helm package secrets-store-csi-driver-provider-infisical
+          for file in *.tgz; do mv {,chart-}"$file"; done
+          yq '.generated = null | .entries[][].digest = null | .entries[][].created = null' index.yaml > index.yaml.a
+          helm repo index . --merge index.yaml --url "https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/releases/download/v${PROVIDER_VERSION}/"
+          yq '.generated = null | .entries[][].digest = null | .entries[][].created = null' index.yaml > index.yaml.b
+
+          diff index.yaml.{a,b}
+
   validate-helm-chart:
     runs-on: ubuntu-latest
     needs: go-test

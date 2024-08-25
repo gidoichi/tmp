@@ -1,10 +1,10 @@
-name: Publish container image
+name: Publish
 on:
   push:
     tags:
       - 'v*'
 jobs:
-  publish:
+  container-image:
     runs-on: ubuntu-latest
     environment:
       name: dockerhub
@@ -23,3 +23,21 @@ jobs:
         env:
           digest: ${{ steps.docker.outputs.digest }}
         run: echo "digest=${digest#sha256:}" >> "$GITHUB_OUTPUT"
+
+  release:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+      - name: Generate Charts
+        working-directory: charts
+        env:
+          PROVIDER_VERSION: ${{ needs.go-test.outputs.version }}
+        run: |
+          set -eux
+          helm package secrets-store-csi-driver-provider-infisical
+          for file in *.tgz; do mv {,chart-}"$file"; done
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: charts/chart-*.tgz

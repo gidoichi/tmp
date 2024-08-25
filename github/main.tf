@@ -36,6 +36,7 @@ resource "github_branch_protection" "default" {
       "build-container",
       "go-test",
       "terraform-plan",
+      "updated-helm-chart-index",
       "validate-deployment",
       "validate-helm-chart",
     ]
