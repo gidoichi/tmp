@@ -1,5 +1,5 @@
 # secrets-store-csi-driver-provider-infisical
-[![Helm charts](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/secrets-store-csi-driver-provider-infisical)](https://artifacthub.io/packages/search?repo=secrets-store-csi-driver-provider-infisical&label=Helm+charts)
+[![Helm charts](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/secrets-store-csi-driver-provider-infisical&label=Helm+charts)](https://artifacthub.io/packages/search?repo=secrets-store-csi-driver-provider-infisical)
 
 Unofficial Infisical provider for the Secret Store CSI Driver.
 
