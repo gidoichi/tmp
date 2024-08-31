@@ -41,3 +41,4 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           files: charts/chart-*.tgz
+          token: ${{ secrets.GH_PAT }}
