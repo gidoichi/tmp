@@ -10,7 +10,8 @@ import (
 
 func TestMountConfigValidates(t *testing.T) {
 	var (
-		validate *validator.Validate
+		idealMountConfig *config.MountConfig
+		validate         *validator.Validate
 	)
 
 	for _, testcase := range []struct {
@@ -21,13 +22,7 @@ func TestMountConfigValidates(t *testing.T) {
 			"SuccessfullyWithFullConfig",
 			func(t *testing.T) {
 				// Given
-				mountConfig := config.NewMountConfig(*validate)
-				mountConfig.Project = "test-project"
-				mountConfig.Env = "dev"
-				mountConfig.Path = "/path/to/secrets"
-				mountConfig.AuthSecretName = "test"
-				mountConfig.AuthSecretNamespace = "test-namepace"
-				mountConfig.RawObjects = ptr.String("- objectName: test")
+				mountConfig := idealMountConfig
 
 				// When
 				err := mountConfig.Validate()
@@ -57,12 +52,40 @@ func TestMountConfigValidates(t *testing.T) {
 			"FailedWithInvalidRawObjects",
 			func(t *testing.T) {
 				// Given
-				mountConfig := config.NewMountConfig(*validate)
-				mountConfig.Project = "test-project"
-				mountConfig.Env = "dev"
-				mountConfig.AuthSecretName = "test"
-				mountConfig.AuthSecretNamespace = "test-namepace"
+				mountConfig := idealMountConfig
 				mountConfig.RawObjects = ptr.String("objectName: test")
+
+				// When
+				err := mountConfig.Validate()
+
+				// Then
+				if err == nil {
+					t.Errorf("expected error, got nil")
+				}
+			},
+		},
+		{
+			"FailedWithoutRequiredRawObjectFields",
+			func(t *testing.T) {
+				// Given
+				mountConfig := idealMountConfig
+				mountConfig.RawObjects = ptr.String("- objectAlias: secret")
+
+				// When
+				err := mountConfig.Validate()
+
+				// Then
+				if err == nil {
+					t.Errorf("expected error, got nil")
+				}
+			},
+		},
+		{
+			"FailedWithInvalidCaractersWithinRawObjectFields",
+			func(t *testing.T) {
+				// Given
+				mountConfig := idealMountConfig
+				mountConfig.RawObjects = ptr.String("- objectName: test\n  objectAlias: path/to/secret")
 
 				// When
 				err := mountConfig.Validate()
@@ -75,6 +98,13 @@ func TestMountConfigValidates(t *testing.T) {
 		},
 	} {
 		validate = validator.New(validator.WithRequiredStructEnabled())
+		idealMountConfig = config.NewMountConfig(*validate)
+		idealMountConfig.Project = "test-project"
+		idealMountConfig.Env = "dev"
+		idealMountConfig.Path = "/path/to/secrets"
+		idealMountConfig.AuthSecretName = "test"
+		idealMountConfig.AuthSecretNamespace = "test-namepace"
+		idealMountConfig.RawObjects = ptr.String("- objectName: test")
 
 		t.Run(testcase.name, testcase.f)
 	}
@@ -150,7 +180,7 @@ func TestMountConfigGetObjects(t *testing.T) {
 			},
 		},
 		{
-			"FailedWithInvalidRawObjects",
+			"FailedWithInvalidFormat",
 			func(t *testing.T) {
 				// Given
 				mountConfig := config.NewMountConfig(*validate)

@@ -145,12 +145,14 @@ func (s *CSIProviderServer) Mount(ctx context.Context, req *v1alpha1.MountReques
 	var objectVersions []*v1alpha1.ObjectVersion
 	var files []*v1alpha1.File
 	if mountConfig.RawObjects == nil {
+		// all secrets
 		mode := int32(filePermission)
 		for _, secret := range secrets {
 			objectVersions = append(objectVersions, &v1alpha1.ObjectVersion{
 				Id:      secret.SecretKey,
 				Version: fmt.Sprint(secret.Version),
 			})
+
 			files = append(files, &v1alpha1.File{
 				Path:     secret.SecretKey,
 				Mode:     mode,
@@ -158,6 +160,7 @@ func (s *CSIProviderServer) Mount(ctx context.Context, req *v1alpha1.MountReques
 			})
 		}
 	} else {
+		// specified secrets
 		secretsMap := map[string]infisical.Secret{}
 		for _, secret := range secrets {
 			secretsMap[secret.SecretKey] = secret
@@ -168,12 +171,20 @@ func (s *CSIProviderServer) Mount(ctx context.Context, req *v1alpha1.MountReques
 				mountResponse.Error.Code = ErrorBadRequest
 				return mountResponse, fmt.Errorf("object %s not found in secrets", object.Name)
 			}
+
 			objectVersions = append(objectVersions, &v1alpha1.ObjectVersion{
 				Id:      object.Name,
 				Version: fmt.Sprint(secret.Version),
 			})
+
 			files = append(files, &v1alpha1.File{
-				Path:     object.Name,
+				Path: func() string {
+					if object.Alias != "" {
+						return object.Alias
+					} else {
+						return object.Name
+					}
+				}(),
 				Mode:     int32(filePermission),
 				Contents: []byte(secret.SecretValue),
 			})

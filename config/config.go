@@ -23,7 +23,8 @@ type MountConfig struct {
 }
 
 type object struct {
-	Name string `yaml:"objectName"`
+	Name  string `yaml:"objectName" validate:"required"`
+	Alias string `yaml:"objectAlias" validate:"excludes=/"`
 }
 
 func NewMountConfig(validator validator.Validate) *MountConfig {
@@ -56,8 +57,14 @@ func (a *MountConfig) Validate() error {
 		return err
 	}
 
-	if _, err := a.Objects(); err != nil {
+	objects, err := a.Objects()
+	if err != nil {
 		return err
+	}
+	for _, object := range objects {
+		if err := a.validator.Struct(object); err != nil {
+			return err
+		}
 	}
 
 	return nil
