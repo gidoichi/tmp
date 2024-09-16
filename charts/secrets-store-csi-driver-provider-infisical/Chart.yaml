@@ -3,4 +3,4 @@ name: secrets-store-csi-driver-provider-infisical
 description: A Helm chart for Infisical provider
 type: application
 version: 0.1.1
-appVersion: "0.2.0"
+appVersion: "0.3.0"
