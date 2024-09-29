@@ -1,0 +1,19 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "branchConcurrentLimit": 0,
+  "labels": ["dependencies"],
+  "schedule": "* * 1-7 * 6",
+  "packageRules": [
+    {
+      "groupName": "dependencies",
+      "matchPackagePatterns": [".*"],
+      "automerge": true,
+      "recreateWhen": "always",
+      "commitMessagePrefix": "[update:patch]",
+      "commitMessageExtra": null
+    }
+  ]
+}
