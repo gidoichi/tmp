@@ -32,3 +32,16 @@ Unofficial Infisical provider for the Secret Store CSI Driver.
    # This deployment lists and reads all secrets, then output logs of their contents
    kubectl apply -f ./examples/deployment.yaml
    ```
+
+## Supported Features
+Some features are not supported by this provider. Please refer to [this](https://secrets-store-csi-driver.sigs.k8s.io/providers#features-supported-by-current-providers) link for the list of features supported by the Secret Store CSI Driver.
+
+| Features                            | Supported |
+|-------------------------------------|-----------|
+| [Sync as Kubernetes Secret][secret] | Yes       |
+| [Rotation][rotation]                | No        |
+| Windows                             | No        |
+| Helm Chart                          | Yes       |
+
+[secret]: https://secrets-store-csi-driver.sigs.k8s.io/topics/sync-as-kubernetes-secret
+[rotation]: https://secrets-store-csi-driver.sigs.k8s.io/topics/secret-auto-rotation
