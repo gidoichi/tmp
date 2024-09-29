@@ -1,8 +1,14 @@
 package config
 
 import (
+	"errors"
+	"fmt"
+	"io"
+	"reflect"
+	"strings"
+
 	"github.com/go-playground/validator/v10"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 type MountConfig struct {
@@ -27,6 +33,29 @@ type object struct {
 	Alias string `yaml:"objectAlias" validate:"excludes=/"`
 }
 
+func NewValidator() *validator.Validate {
+	validator := validator.New(validator.WithRequiredStructEnabled())
+	validator.RegisterTagNameFunc(func(fld reflect.StructField) string {
+		var tag string
+		if v, ok := fld.Tag.Lookup("yaml"); ok {
+			tag = v
+		} else if v, ok := fld.Tag.Lookup("json"); ok {
+			tag = v
+		} else {
+			return fld.Name
+		}
+
+		name := strings.SplitN(tag, ",", 2)[0]
+		// skip if tag key says it should be ignored
+		if name == "-" {
+			return ""
+		}
+		return name
+	})
+
+	return validator
+}
+
 func NewMountConfig(validator validator.Validate) *MountConfig {
 	return &MountConfig{
 		Path:      "/",
@@ -44,7 +73,11 @@ func (a *MountConfig) Objects() ([]object, error) {
 	}
 
 	var objects []object
-	if err := yaml.Unmarshal([]byte(*a.RawObjects), &objects); err != nil {
+	objectDecoder := yaml.NewDecoder(strings.NewReader(*a.RawObjects))
+	objectDecoder.KnownFields(true)
+	// Decode returns io.EOF error when empty string is passed
+	// c.f. https://github.com/go-yaml/yaml/blob/v3.0.1/yaml.go#L123-L126
+	if err := objectDecoder.Decode(&objects); err != nil && !errors.Is(err, io.EOF) {
 		return nil, err
 	}
 
@@ -59,11 +92,11 @@ func (a *MountConfig) Validate() error {
 
 	objects, err := a.Objects()
 	if err != nil {
-		return err
+		return NewConfigError("objects", err)
 	}
-	for _, object := range objects {
+	for i, object := range objects {
 		if err := a.validator.Struct(object); err != nil {
-			return err
+			return NewConfigError("objects", fmt.Errorf("[%d]: %w", i, err))
 		}
 	}
 

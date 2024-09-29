@@ -1,0 +1,19 @@
+{{- if .Values.webhook.enable }}
+{{- if .Values.webhook.certManager.caInjection }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  labels:
+    {{- include "secrets-store-csi-driver-provider-infisical.labels" . | nindent 4 }}
+  name: {{ include "secrets-store-csi-driver-provider-infisical.webhook.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  dnsNames:
+  - {{ include "secrets-store-csi-driver-provider-infisical.webhook.fullname" . }}.{{ .Release.Namespace }}.svc
+  - {{ include "secrets-store-csi-driver-provider-infisical.webhook.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+  issuerRef:
+    kind: Issuer
+    name: {{ include "secrets-store-csi-driver-provider-infisical.webhook.issuer.name" . }}
+  secretName: {{ include "secrets-store-csi-driver-provider-infisical.webhook.fullname" . }}
+{{- end }}
+{{- end }}

@@ -1,6 +1,7 @@
 package config_test
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/gidoichi/secrets-store-csi-driver-provider-infisical/config"
@@ -62,6 +63,9 @@ func TestMountConfigValidates(t *testing.T) {
 				if err == nil {
 					t.Errorf("expected error, got nil")
 				}
+				if !strings.HasPrefix(err.Error(), "objects: ") {
+					t.Errorf("unexpected error: %s", err)
+				}
 			},
 		},
 		{
@@ -77,6 +81,9 @@ func TestMountConfigValidates(t *testing.T) {
 				// Then
 				if err == nil {
 					t.Errorf("expected error, got nil")
+				}
+				if !strings.HasPrefix(err.Error(), "objects: [0]: ") {
+					t.Errorf("unexpected error: %s", err)
 				}
 			},
 		},
@@ -94,10 +101,13 @@ func TestMountConfigValidates(t *testing.T) {
 				if err == nil {
 					t.Errorf("expected error, got nil")
 				}
+				if !strings.HasPrefix(err.Error(), "objects: [0]: ") {
+					t.Errorf("unexpected error: %s", err)
+				}
 			},
 		},
 	} {
-		validate = validator.New(validator.WithRequiredStructEnabled())
+		validate = config.NewValidator()
 		idealMountConfig = config.NewMountConfig(*validate)
 		idealMountConfig.Project = "test-project"
 		idealMountConfig.Env = "dev"
@@ -196,7 +206,7 @@ func TestMountConfigGetObjects(t *testing.T) {
 			},
 		},
 	} {
-		validate = validator.New(validator.WithRequiredStructEnabled())
+		validate = config.NewValidator()
 
 		t.Run(testcase.name, testcase.f)
 	}

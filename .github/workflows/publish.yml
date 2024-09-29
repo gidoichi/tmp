@@ -27,6 +27,8 @@ jobs:
   release:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: azure/setup-helm@v4
@@ -41,4 +43,4 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           files: charts/chart-*.tgz
-          token: ${{ secrets.GH_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}

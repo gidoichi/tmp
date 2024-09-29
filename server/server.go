@@ -46,7 +46,7 @@ func NewCSIProviderServer(version, socketPath string, auth auth.Auth, infisicalC
 		socketPath:             socketPath,
 		auth:                   auth,
 		infisicalClientFactory: infisicalClientFactory,
-		validator:              validator.New(validator.WithRequiredStructEnabled()),
+		validator:              config.NewValidator(),
 	}
 	v1alpha1.RegisterCSIDriverProviderServer(server, s)
 	return s

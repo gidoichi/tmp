@@ -1,0 +1,81 @@
+{{- if .Values.webhook.enable }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "secrets-store-csi-driver-provider-infisical.webhook.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "secrets-store-csi-driver-provider-infisical.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "secrets-store-csi-driver-provider-infisical.webhook.selectorLabels" . | nindent 6 }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        {{- include "secrets-store-csi-driver-provider-infisical.webhook.selectorLabels" . | nindent 10 }}
+      annotations:
+        kubectl.kubernetes.io/default-container: manager
+    spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: manager
+        image: "{{ .Values.image.repository }}:{{ .Values.webhook.image.tag | default (printf "v%s" .Chart.AppVersion) }}"
+        imagePullPolicy: {{ .Values.webhook.image.pullPolicy }}
+        command:
+        - admission-webhook
+        args:
+          - --tls-cert-file=/tmp/k8s-webhook-server/serving-certs/tls.crt
+          - --tls-key-file=/tmp/k8s-webhook-server/serving-certs/tls.key
+        ports:
+        - containerPort: 8080
+          name: webhook-server
+          protocol: TCP
+        - containerPort: 8081
+          name: metrics
+          protocol: TCP
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - "ALL"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        volumeMounts:
+        - mountPath: /tmp/k8s-webhook-server/serving-certs
+          name: cert
+          readOnly: true
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - name: cert
+        secret:
+          defaultMode: 420
+          secretName: {{ include "secrets-store-csi-driver-provider-infisical.webhook.fullname" . }}
+      {{- with .Values.webhook.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.webhook.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.webhook.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

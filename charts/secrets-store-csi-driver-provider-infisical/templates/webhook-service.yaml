@@ -1,0 +1,16 @@
+{{- if .Values.webhook.enable }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "secrets-store-csi-driver-provider-infisical.webhook.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "secrets-store-csi-driver-provider-infisical.labels" . | nindent 4 }}
+spec:
+  ports:
+    - port: 443
+      protocol: TCP
+      targetPort: webhook-server
+  selector:
+    {{- include "secrets-store-csi-driver-provider-infisical.webhook.selectorLabels" . | nindent 4 }}
+{{- end }}

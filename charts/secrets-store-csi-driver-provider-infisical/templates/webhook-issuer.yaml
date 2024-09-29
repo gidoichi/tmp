@@ -1,0 +1,13 @@
+{{- if .Values.webhook.enable }}
+{{- if .Values.webhook.certManager.issuer.create }}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  labels:
+    {{- include "secrets-store-csi-driver-provider-infisical.labels" . | nindent 4 }}
+  name: {{ include "secrets-store-csi-driver-provider-infisical.webhook.issuer.name" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selfSigned: {}
+{{- end }}
+{{- end }}

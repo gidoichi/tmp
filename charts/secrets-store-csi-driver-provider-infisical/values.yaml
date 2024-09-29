@@ -66,3 +66,31 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+webhook:
+  # Enable validating webhook to validate SecretProviderClass.
+  # When enabled, the creation of an invalid SecretProviderClass using Infisical provider is blocked.
+  enable: false
+  image:
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+  resources: {}
+    # limits:
+    #   cpu: 500m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 10m
+    #   memory: 64Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  certManager:
+    # Enable cert-manager CA injection to connect to the webhook server.
+    # This requires the cert-manager CA Injector to be running.
+    caInjection: true
+    # Specifies whether an issuer should be created or using existing one.
+    # If using an existing issuer, set `create: false` and specify the issuer name in `nameOverride`.
+    issuer:
+      create: true
+      nameOverride: ""

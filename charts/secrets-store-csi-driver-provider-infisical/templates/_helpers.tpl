@@ -74,3 +74,35 @@ Create the name of the cluster role binding to use
 {{- define "secrets-store-csi-driver-provider-infisical.clusterRoleBindingName" -}}
 {{- default (include "secrets-store-csi-driver-provider-infisical.fullname" .) .Values.clusterRoleBinding.name }}
 {{- end }}
+
+{{/*
+Selector labels for webhooks
+*/}}
+{{- define "secrets-store-csi-driver-provider-infisical.webhook.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "secrets-store-csi-driver-provider-infisical.webhook.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Create a default fully qualified app name for webhooks
+*/}}
+{{- define "secrets-store-csi-driver-provider-infisical.webhook.fullname" -}}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 55 | trimSuffix "-" }}-webhook
+{{- else }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- if contains $name .Release.Name }}
+{{- .Release.Name | trunc 55 | trimSuffix "-" }}-webhook
+{{- else }}
+{{- printf "%s-%s" .Release.Name $name | trunc 55 | trimSuffix "-" }}-webhook
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Expand the name for webhooks
+*/}}
+{{- define "secrets-store-csi-driver-provider-infisical.webhook.issuer.name" -}}
+{{- default (include "secrets-store-csi-driver-provider-infisical.webhook.fullname" .) .Values.webhook.certManager.issuer.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
