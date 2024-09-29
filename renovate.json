@@ -11,9 +11,7 @@
       "groupName": "dependencies",
       "matchPackagePatterns": [".*"],
       "automerge": true,
-      "recreateWhen": "always",
-      "commitMessagePrefix": "[update:patch]",
-      "commitMessageExtra": null
+      "recreateWhen": "always"
     }
   ]
 }

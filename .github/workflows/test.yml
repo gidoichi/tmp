@@ -21,9 +21,15 @@ jobs:
         with:
           go-version-file: go.mod
       - name: Build
-        run: go build -v ./...
+        run: |
+          set -eux
+          go build -v ./...
+          (cd admission-webhook && go build -v ./...)
       - name: Test
-        run: go test -v ./...
+        run: |
+          set -eux
+          go test -v ./...
+          (cd admission-webhook && go test -v ./...)
       - name: Version
         id: version
         run: |
