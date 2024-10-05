@@ -8,7 +8,7 @@ require (
 	go.uber.org/mock v0.4.0
 	go.uber.org/thriftrw v1.32.0
 	golang.org/x/mod v0.21.0
-	google.golang.org/grpc v1.67.0
+	google.golang.org/grpc v1.67.1
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/apimachinery v0.31.1
 	k8s.io/client-go v0.31.1
@@ -95,6 +95,6 @@ require (
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
 
-replace github.com/Infisical/infisical-merge => github.com/Infisical/infisical/cli v0.0.0-20240927213119-efa54e0c4698
+replace github.com/Infisical/infisical-merge => github.com/Infisical/infisical/cli v0.0.0-20241005020017-f8358a0807f8
 
 replace github.com/zalando/go-keyring => github.com/Infisical/go-keyring v1.0.2

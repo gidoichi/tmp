@@ -2,10 +2,10 @@ module github.com/gidoichi/secrets-store-csi-driver-provider-infisical/admission
 
 go 1.23.0
 
-toolchain go1.23.1
+toolchain go1.23.2
 
 require (
-	github.com/gidoichi/secrets-store-csi-driver-provider-infisical v0.0.0
+	github.com/gidoichi/secrets-store-csi-driver-provider-infisical v0.4.1
 	github.com/go-playground/validator/v10 v10.22.1
 	github.com/prometheus/client_golang v1.20.4
 	github.com/sirupsen/logrus v1.9.3
