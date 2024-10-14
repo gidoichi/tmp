@@ -404,6 +404,8 @@ sigs.k8s.io/secrets-store-csi-driver v1.4.4 h1:q4tLZ5fKJgKV9YCYrUlLI4inxPLJTH9xN
 sigs.k8s.io/secrets-store-csi-driver v1.4.4/go.mod h1:0/wMVOv8qLx7YNVMGU+Sh7S4D6TH6GhyEpouo28OTUU=
 sigs.k8s.io/secrets-store-csi-driver v1.4.5 h1:ta4aiNbl2EAWKrn3hFnN4Nll8mC6cgBP9+O4XdzorHM=
 sigs.k8s.io/secrets-store-csi-driver v1.4.5/go.mod h1:0/wMVOv8qLx7YNVMGU+Sh7S4D6TH6GhyEpouo28OTUU=
+sigs.k8s.io/secrets-store-csi-driver v1.4.6 h1:1OBP3cf6juFc87rluIXBB3U4JoVKuE7kHZmlE8ZRiQA=
+sigs.k8s.io/secrets-store-csi-driver v1.4.6/go.mod h1:0/wMVOv8qLx7YNVMGU+Sh7S4D6TH6GhyEpouo28OTUU=
 sigs.k8s.io/structured-merge-diff/v4 v4.2.3 h1:PRbqxJClWWYMNV1dhaG4NsibJbArud9kFxnAMREiWFE=
 sigs.k8s.io/structured-merge-diff/v4 v4.2.3/go.mod h1:qjx8mGObPmV2aSZepjQjbmb2ihdVs8cGKBraizNC69E=
 sigs.k8s.io/structured-merge-diff/v4 v4.4.1 h1:150L+0vs/8DA78h1u02ooW1/fFq/Lwr+sGiqlzvrtq4=

@@ -12,7 +12,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/apimachinery v0.31.1
 	k8s.io/client-go v0.31.1
-	sigs.k8s.io/secrets-store-csi-driver v1.4.5
+	sigs.k8s.io/secrets-store-csi-driver v1.4.6
 )
 
 require (
@@ -95,6 +95,6 @@ require (
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
 
-replace github.com/Infisical/infisical-merge => github.com/Infisical/infisical/cli v0.0.0-20241005020017-f8358a0807f8
+replace github.com/Infisical/infisical-merge => github.com/Infisical/infisical/cli v0.0.0-20241014054859-7fdcb29babcd
 
 replace github.com/zalando/go-keyring => github.com/Infisical/go-keyring v1.0.2
