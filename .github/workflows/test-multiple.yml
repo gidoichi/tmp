@@ -1,0 +1,9 @@
+on:
+  workflow_dispatch:
+  push:
+jobs:
+  multiple:
+    uses: ./.github/workflows/test-e2e.yml
+    secrets: inherit
+    with:
+      type: multiple

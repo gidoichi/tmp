@@ -8,7 +8,8 @@ Unofficial Infisical provider for the Secret Store CSI Driver.
 1. Install Infisical secret proivder
    - If you can use [HELM](https://helm.sh/):
      ```
-     helm install secrets-store-csi-driver-provider-infisical charts/secrets-store-csi-driver-provider-infisical
+     helm repo add secrets-store-csi-driver-provider-infisical https://raw.githubusercontent.com/gidoichi/secrets-store-csi-driver-provider-infisical/main/charts
+     helm install secrets-store-csi-driver-provider-infisical secrets-store-csi-driver-provider-infisical/secrets-store-csi-driver-provider-infisical
      ```
    - If you want to use kubectl (Using HELM is recommended, as some features are excluded from `./deployment`):
      ```
@@ -45,3 +46,34 @@ Some features are not supported by this provider. Please refer to [this](https:/
 
 [secret]: https://secrets-store-csi-driver.sigs.k8s.io/topics/sync-as-kubernetes-secret
 [rotation]: https://secrets-store-csi-driver.sigs.k8s.io/topics/secret-auto-rotation
+
+### Test
+The following are tested scenarios as part of CI. More detailed descriptions of these scenarios are available [here](https://github.com/kubernetes-sigs/secrets-store-csi-driver/tree/v1.4.5/test).
+
+| Test Category                                          | Status                           |
+|--------------------------------------------------------|----------------------------------|
+| Mount tests                                            | [![mount-badge]][mount-ci]       |
+| Sync as Kubernetes secrets                             | [![sync-badge]][sync-ci]         |
+| Namespaced Scope SecretProviderClass                   | [![ns-badge]][ns-ci]             |
+| Namespaced Scope SecretProviderClass negative test     | [![nsneg-badge]][nsneg-ci]       |
+| Multiple SecretProviderClass                           | [![multiple-badge]][multiple-ci] |
+| Autorotation of mount contents and Kubernetes secrets  | [![rotate-badge]][rotate-ci]     |
+| Test filtered watch for `nodePublishSecretRef` feature | [![filtered-badge]][filtered-ci] |
+| Windows tests                                          | [![windows-badge]][windows-ci]   |
+
+[mount-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-mount.yml/badge.svg?branch=e2e
+[mount-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-mount.yml?query=branch%3Ae2e
+[sync-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-sync.yml/badge.svg?branch=e2e
+[sync-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-sync.yml?query=branch%3Ae2e
+[ns-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-namespaced.yml/badge.svg?branch=e2e
+[ns-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-namespaced.yml?query=branch%3Ae2e
+[nsneg-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-namespaced-neg.yml/badge.svg?branch=e2e
+[nsneg-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-namespaced-neg.yml?query=branch%3Ae2e
+[multiple-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-multiple.yml/badge.svg?branch=e2e
+[multiple-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-multiple.yml?query=branch%3Ae2e
+[rotate-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-rotate.yml/badge.svg?branch=e2e
+[rotate-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-rotate.yml?query=branch%3Ae2e
+[filtered-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-filtered.yml/badge.svg?branch=e2e
+[filtered-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-filtered.yml?query=branch%3Ae2e
+[windows-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-windows.yml/badge.svg?branch=e2e
+[windows-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-windows.yml?query=branch%3Ae2e

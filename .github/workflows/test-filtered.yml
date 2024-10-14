@@ -1,0 +1,10 @@
+on:
+  workflow_dispatch:
+  push:
+jobs:
+  filtered:
+    if: "false"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        run: "false"

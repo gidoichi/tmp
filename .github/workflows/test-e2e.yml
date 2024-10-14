@@ -1,0 +1,44 @@
+on:
+  workflow_call:
+    inputs:
+      type:
+        required: false
+        type: string
+  workflow_dispatch:
+    inputs:
+      type:
+        required: false
+        type: string
+jobs:
+  e2e-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: mig4/setup-bats@v1
+        with:
+          # renovate: datasource=github-tags depName=bats-core/bats-core versioning=semver
+          bats-version: 1.11.0
+      - uses: engineerd/setup-kind@v0.5.0
+        with:
+          # renovate: datasource=github-tags depName=kubernetes-sigs/kind versioning=semver
+          version: v0.24.0
+          image: kindest/node:v1.30.4
+      - name: Test
+        env:
+          CLIENT_ID: ${{ secrets.E2E_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.E2E_CLIENT_SECRET }}
+          PROJECT_SLUG: ${{ secrets.E2E_PROJECT_SLUG }}
+          SECRET_NAME: ${{ secrets.E2E_SECRET_NAME }}
+          SECRET_VALUE: ${{ secrets.E2E_SECRET_VALUE }}
+          TYPE: ${{ inputs.type }}
+        run: |
+          helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
+          helm install secrets-store-csi-driver secrets-store-csi-driver/secrets-store-csi-driver --version v1.4.5 --set syncSecret.enabled=true
+          if [ -z "$TYPE" ]; then
+            make e2e
+          else
+            make "e2e-$TYPE"
+          fi
