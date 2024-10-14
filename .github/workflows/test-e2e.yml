@@ -1,6 +1,9 @@
 on:
   workflow_call:
     inputs:
+      image-tag:
+        required: false
+        type: string
       type:
         required: false
         type: string
@@ -30,6 +33,7 @@ jobs:
         env:
           CLIENT_ID: ${{ secrets.E2E_CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.E2E_CLIENT_SECRET }}
+          IMAGE_TAG: ${{ inputs.image-tag }}
           PROJECT_SLUG: ${{ secrets.E2E_PROJECT_SLUG }}
           SECRET_NAME: ${{ secrets.E2E_SECRET_NAME }}
           SECRET_VALUE: ${{ secrets.E2E_SECRET_VALUE }}
