@@ -67,9 +67,7 @@ teardown() {
 
 # bats test_tags=init
 @test "install infisical provider" {
-    helm repo add secrets-store-csi-driver-provider-infisical https://raw.githubusercontent.com/gidoichi/secrets-store-csi-driver-provider-infisical/main/charts
-    helm install secrets-store-csi-driver-provider-infisical \
-        secrets-store-csi-driver-provider-infisical/secrets-store-csi-driver-provider-infisical \
+    helm install secrets-store-csi-driver-provider-infisical charts/secrets-store-csi-driver-provider-infisical \
         --namespace "$PROVIDER_NAMESPACE" \
         --set "image.tag=${IMAGE_TAG:-latest}"
     kubectl wait -n "$PROVIDER_NAMESPACE" --for=condition=Ready --timeout=60s pod -l app.kubernetes.io/name=secrets-store-csi-driver-provider-infisical
