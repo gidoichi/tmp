@@ -1,0 +1,40 @@
+name: Default branch
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      value: v${{ steps.version.outputs.runtime }}
+      pushed: ${{ steps.exists.outputs.exists == 'false' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Get runtime version
+        id: version
+        run: printf 'runtime=%s' "$(go run main.go --version)" >> "$GITHUB_OUTPUT"
+      - uses: mukunku/tag-exists-action@v1.6.0
+        id: exists
+        with:
+          tag: v${{ steps.version.outputs.runtime }}
+      - name: Push tag
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          custom_tag: ${{ steps.version.outputs.runtime }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  publish:
+    needs: tag
+    if: ${{ needs.tag.outputs.pushed == 'true' }}
+    permissions:
+      contents: write
+    uses: ./.github/workflows/publish.yml
+    secrets: inherit
+    with:
+      tag: ${{ needs.tag.outputs.value }}

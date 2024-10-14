@@ -4,6 +4,9 @@ on:
       image-tag:
         required: false
         type: string
+      tag-type:
+        required: false
+        type: string
       type:
         required: false
         type: string
@@ -13,7 +16,34 @@ on:
         required: false
         type: string
 jobs:
+  tag:
+    runs-on: ubuntu-latest
+    outputs:
+      value: ${{ steps.determined.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get the latest tag
+        id: latest
+        uses: anothrNick/github-tag-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DRY_RUN: true
+      - name: Determine tag
+        id: determined
+        env:
+          TAG_TYPE: ${{ inputs.tag-type }}
+          INPUT_TAG: ${{ inputs.image-tag }}
+          LATEST_TAG: ${{ steps.latest.outputs.old_tag }}
+        run: |
+          set -eux
+          case "$TAG_TYPE" in
+              input|'')   echo "tag=$INPUT_TAG"  >> "$GITHUB_OUTPUT" ;;
+              latest-tag) echo "tag=$LATEST_TAG" >> "$GITHUB_OUTPUT" ;;
+              latest)     echo "tag=latest"      >> "$GITHUB_OUTPUT" ;;
+          esac
+
   e2e-test:
+    needs: tag
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -33,7 +63,7 @@ jobs:
         env:
           CLIENT_ID: ${{ secrets.E2E_CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.E2E_CLIENT_SECRET }}
-          IMAGE_TAG: ${{ inputs.image-tag }}
+          IMAGE_TAG: ${{ needs.tag.outputs.value }}
           PROJECT_SLUG: ${{ secrets.E2E_PROJECT_SLUG }}
           SECRET_NAME: ${{ secrets.E2E_SECRET_NAME }}
           SECRET_VALUE: ${{ secrets.E2E_SECRET_VALUE }}

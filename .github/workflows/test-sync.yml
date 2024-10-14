@@ -4,11 +4,16 @@ on:
       image-tag:
         required: false
         type: string
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Default branch"]
+    types:
+      - completed
 jobs:
   sync:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     uses: ./.github/workflows/test-e2e.yml
     secrets: inherit
     with:
       image-tag: ${{ inputs.image-tag }}
+      tag-type: ${{ inputs.image-tag && 'input' || github.event_name == 'workflow_run' && 'latest-tag' || 'latest' }}
       type: sync
