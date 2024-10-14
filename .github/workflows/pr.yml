@@ -11,4 +11,4 @@ jobs:
     uses: ./.github/workflows/test-mount.yml
     secrets: inherit
     with:
-      image-tag: ${{ jobs.publish-pr.outputs.digest }}
+      image-tag: ${{ needs.publish-pr.outputs.digest }}
