@@ -4,11 +4,45 @@ on:
       image-tag:
         required: false
         type: string
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Default branch"]
+    types:
+      - completed
 jobs:
+  tag:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.determined.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get the latest tag
+        id: latest
+        uses: anothrNick/github-tag-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DRY_RUN: true
+      - name: Determine tag
+        id: determined
+        env:
+          INPUT_TAG: ${{ inputs.image-tag }}
+          EVENT_NAME: ${{ github.event_name }}
+          LATEST_TAG: ${{ steps.latest.outputs.old_tag }}
+        run: |
+          set -eux
+          if [ -n "$INPUT_TAG" ]; then
+            echo "tag=$INPUT_TAG" >> "$GITHUB_OUTPUT"
+            exit
+          fi
+          if [ "$EVENT_NAME" == 'workflow_run' ]; then
+            echo "tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
+            exit
+          fi
+          echo "tag=latest" >> "$GITHUB_OUTPUT"
   mount:
+    needs: tag
     uses: ./.github/workflows/test-e2e.yml
     secrets: inherit
     with:
-      image-tag: ${{ inputs.image-tag }}
+      image-tag: ${{ needs.tag.outputs.tag }}
       type: mount

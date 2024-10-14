@@ -1,24 +1,20 @@
 name: Publish
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
 jobs:
   container-image:
     runs-on: ubuntu-latest
-    environment:
-      name: dockerhub
-      url: https://hub.docker.com/layers/gidoichi/secrets-store-csi-driver-provider-infisical/${{ github.ref_name }}/images/sha256-${{ steps.sha256.outputs.digest }}
     steps:
-      - uses: docker/login-action@v3
-        with:
-          username: gidoichi
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: actions/checkout@v4
       - uses: docker/build-push-action@v6
         id: docker
         with:
-          push: true
-          tags: ${{ github.repository }}:${{ github.ref_name }},${{ github.repository }}:latest
+          push: false
+          tags: ${{ github.repository }}:${{ inputs.tag }},${{ github.repository }}:latest
       - id: sha256
         env:
           digest: ${{ steps.docker.outputs.digest }}
@@ -26,7 +22,6 @@ jobs:
 
   release:
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
     permissions:
       contents: write
     steps:
@@ -34,8 +29,6 @@ jobs:
       - uses: azure/setup-helm@v4
       - name: Generate Charts
         working-directory: charts
-        env:
-          PROVIDER_VERSION: ${{ needs.go-test.outputs.version }}
         run: |
           set -eux
           helm package secrets-store-csi-driver-provider-infisical
@@ -43,4 +36,5 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           files: charts/chart-*.tgz
+          tag_name: ${{ inputs.tag }}
           token: ${{ secrets.GITHUB_TOKEN }}
