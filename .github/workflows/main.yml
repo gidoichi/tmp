@@ -30,6 +30,8 @@ jobs:
   publish:
     needs: tag
     if: ${{ needs.tag.outputs.pushed }}
+    permissions:
+      contents: write
     uses: ./.github/workflows/publish.yml
     secrets: inherit
     with:
