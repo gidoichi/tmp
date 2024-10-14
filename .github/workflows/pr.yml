@@ -37,3 +37,12 @@ jobs:
     secrets: inherit
     with:
       image-tag: latest@${{ needs.publish-pr.outputs.digest }}
+  test-rotate:
+    needs: publish-pr
+    uses: ./.github/workflows/test-rotate.yml
+  test-filtered:
+    needs: publish-pr
+    uses: ./.github/workflows/test-filtered.yml
+  test-windows:
+    needs: publish-pr
+    uses: ./.github/workflows/test-windows.yml
