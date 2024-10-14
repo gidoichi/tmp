@@ -1,9 +1,14 @@
 on:
+  workflow_call:
+    inputs:
+      image-tag:
+        required: false
+        type: string
   workflow_dispatch:
-  push:
 jobs:
   multiple:
     uses: ./.github/workflows/test-e2e.yml
     secrets: inherit
     with:
+      image-tag: ${{ inputs.image-tag }}
       type: multiple
