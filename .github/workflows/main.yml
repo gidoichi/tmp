@@ -1,4 +1,4 @@
-name: Tag
+name: Default branch
 on:
   workflow_dispatch:
   push:
@@ -6,6 +6,9 @@ on:
 jobs:
   tag:
     runs-on: ubuntu-latest
+    outputs:
+      value: v${{ steps.version.outputs.runtime }}
+      pushed: "!${{ steps.exists.outputs.exists }}"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -14,8 +17,20 @@ jobs:
       - name: Get runtime version
         id: version
         run: printf 'runtime=%s' "$(go run main.go --version)" >> "$GITHUB_OUTPUT"
+      - uses: mukunku/tag-exists-action@v1.6.0
+        id: exists
+        with:
+          tag: v${{ steps.version.outputs.runtime }}
       - name: Push tag
         uses: mathieudutour/github-tag-action@v6.2
         with:
           custom_tag: ${{ steps.version.outputs.runtime }}
           github_token: ${{ secrets.GH_PAT }}
+
+  publish:
+    needs: tag
+    if: ${{ needs.tag.outputs.pushed }}
+    uses: ./.github/workflows/publish.yml
+    secrets: inherit
+    with:
+      tag: ${{ needs.tag.outputs.value }}
