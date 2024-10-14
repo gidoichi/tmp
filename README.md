@@ -61,19 +61,19 @@ The following are tested scenarios as part of CI. More detailed descriptions of 
 | Test filtered watch for `nodePublishSecretRef` feature | [![filtered-badge]][filtered-ci] |
 | Windows tests                                          | [![windows-badge]][windows-ci]   |
 
-[mount-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-mount.yml/badge.svg?branch=e2e
-[mount-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-mount.yml?query=branch%3Ae2e
-[sync-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-sync.yml/badge.svg?branch=e2e
-[sync-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-sync.yml?query=branch%3Ae2e
-[ns-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-namespaced.yml/badge.svg?branch=e2e
-[ns-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-namespaced.yml?query=branch%3Ae2e
-[nsneg-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-namespaced-neg.yml/badge.svg?branch=e2e
-[nsneg-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-namespaced-neg.yml?query=branch%3Ae2e
-[multiple-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-multiple.yml/badge.svg?branch=e2e
-[multiple-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-multiple.yml?query=branch%3Ae2e
-[rotate-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-rotate.yml/badge.svg?branch=e2e
-[rotate-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-rotate.yml?query=branch%3Ae2e
-[filtered-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-filtered.yml/badge.svg?branch=e2e
-[filtered-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-filtered.yml?query=branch%3Ae2e
-[windows-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-windows.yml/badge.svg?branch=e2e
-[windows-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-windows.yml?query=branch%3Ae2e
+[mount-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-mount.yml/badge.svg?branch=main
+[mount-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-mount.yml?query=branch%3Amain
+[sync-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-sync.yml/badge.svg?branch=main
+[sync-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-sync.yml?query=branch%3Amain
+[ns-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-namespaced.yml/badge.svg?branch=main
+[ns-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-namespaced.yml?query=branch%3Amain
+[nsneg-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-namespaced-neg.yml/badge.svg?branch=main
+[nsneg-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-namespaced-neg.yml?query=branch%3Amain
+[multiple-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-multiple.yml/badge.svg?branch=main
+[multiple-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-multiple.yml?query=branch%3Amain
+[rotate-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-rotate.yml/badge.svg?branch=main
+[rotate-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-rotate.yml?query=branch%3Amain
+[filtered-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-filtered.yml/badge.svg?branch=main
+[filtered-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-filtered.yml?query=branch%3Amain
+[windows-badge]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-windows.yml/badge.svg?branch=main
+[windows-ci]: https://github.com/gidoichi/secrets-store-csi-driver-provider-infisical/actions/workflows/test-windows.yml?query=branch%3Amain

@@ -10,13 +10,13 @@
     {
       "customType": "regex",
       "fileMatch": ["^\\.github/workflows/.*\\.yml$"],
-      "matchStrings": ["helm repo add \\S* (?<registryUrl>\\S?)\\s+helm install .*/(?<depName>.*?) --version (?<currentValue>\\S+)"],
+      "matchStrings": ["helm repo add \\S* (?<registryUrl>\\S+?)\\s+helm install .*/(?<depName>.*?) --version (?<currentValue>\\S+)"],
       "datasourceTemplate": "helm"
     },
     {
       "customType": "regex",
       "fileMatch": ["^\\.github/workflows/.*\\.yml$"],
-      "matchStrings": ["# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?) versioning=(?<versioning>.*?)\\s+\\S+: (?<currentValue>\\S+)$"],
+      "matchStrings": ["# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?) versioning=(?<versioning>.*?)\\s+\\S+: (?<currentValue>\\S+)"],
       "versioningTemplate": "{{{versioning}}}"
     },
     {
